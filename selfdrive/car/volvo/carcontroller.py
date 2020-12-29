@@ -173,7 +173,10 @@ class CarController():
           # MIGHT be needed for EUCD
           self.SteerCommand.steer_direction = CCP.STEER_RIGHT if current_steer_angle > self.SteerCommand.angle_request else CCP.STEER_LEFT
           self.SteerCommand.steer_direction = self.dir_change(self.SteerCommand.steer_direction, current_steer_angle-self.SteerCommand.angle_request) # Filter the direction change 
-          
+
+        # This function will make the steering false trigger.
+        # There is no way to know why the steering is moving (road, user input, LKA torque)
+        # Don't use except in debug conditions.  
         # get maximum allowed steering angle request
         #max_right, max_left, max_delta_right, max_delta_left = self.max_angle_req(current_steer_angle, self.angle_request_prev, CCP)
         
@@ -227,7 +230,7 @@ class CarController():
       can_sends.append(volvocan.create_steering_control(self.packer, frame, self.CP.carFingerprint, self.SteerCommand, CS.FSMInfo))
 
     
-    # Cancel ACC if engaged when OP is not.
+    # Cancel ACC if engaged when OP is not engaged.
     if not enabled and CS.out.cruiseState.enabled:
       can_sends.append(volvocan.cancelACC(self.packer, self.CP.carFingerprint, CS))
 

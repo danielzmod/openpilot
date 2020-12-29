@@ -36,29 +36,35 @@ Extended CAN
 
 class CarControllerParams():
   # constants, collected from v40 dbc lka_direction.
+  # Normally the car uses STEER_RIGHT and STEER_LEFT.
+  # However it's possible to use STEER in C1MCA.
+  # Servo then accepts steering in both directions.
   STEER_NO = 0
   STEER_RIGHT = 1
   STEER_LEFT = 2
   STEER = 3
 
   # maximum degress offset/rate of change on request from current/last steering angle
-  MAX_ACT_ANGLE_REQUEST_DIFF = 25   # A bigger angle difference will trigger disengage.
-  STEER_ANGLE_DELTA_REQ_DIFF = 0.25
+  # Not used, old code
+  #MAX_ACT_ANGLE_REQUEST_DIFF = 3   # A bigger angle difference will trigger disengage.
+  #STEER_ANGLE_DELTA_REQ_DIFF = 0.25 # Not used for C1MCA
 
   # Limits  
-  ANGLE_DELTA_BP = [0., 5., 15., 27., 36.]   # 0, 18, 54, 97.2, 129.6 km/h
-  ANGLE_DELTA_V = [2, 1.2, .15, .1, .08]     # windup limit
-  ANGLE_DELTA_VU = [3, 1.8, 0.4, .2, .1]   # unwind limit
+  ANGLE_DELTA_BP = [0., 8.33, 13.89, 19.44, 25., 30.55, 36.1]   # 0, 30, 50, 70, 90, 110, 130 km/h
+  ANGLE_DELTA_V = [2., 1.2, .25, .20, .15, .10, .10]     # windup limit
+  ANGLE_DELTA_VU = [2., 1.2, .25, .20, .15, .10, .10]   # unwind limit
 
   # number of 0 torque samples in a row before trying to restore steering.
-  N_ZERO_TRQ = 10
+  # Got one false trigger on motorway with 10. 
+  # Increase to 12 is probably a good tradeoff between false triggers 
+  # and detecting fault.
+  N_ZERO_TRQ = 12
 
   # EUCD
   # When changing steer direction steering request need to be blocked.
   # This calibration sets the number of samples to block it and no steering instead.
   BLOCK_LEN = 8
   # don't change steer direction inside deadzone, 
-  # might not be needed in future after discovering STEER command.
   DEADZONE = 0.1
 
 

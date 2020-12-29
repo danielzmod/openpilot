@@ -108,10 +108,10 @@ class CarState(CarStateBase):
     
      # Steering
     ret.steeringAngle = cp.vl["PSCM1"]['SteeringAngleServo']
-    ret.steeringTorque = 0 # Needed? No signal to check against yet
-    ret.steeringPressed = bool(cp.vl["CCButtons"]['ACCSetBtn'] or \
-      cp.vl["CCButtons"]['ACCMinusBtn'] or \
-      cp.vl["CCButtons"]['ACCResumeBtn']) 
+    ret.steeringTorque = cp.vl["PSCM1"]['LKATorque']  # Only active when LKA is steering
+    ret.steeringPressed = bool(cp.vl["CCButtons"]['ACCSetBtn'] \
+                              or cp.vl["CCButtons"]['ACCMinusBtn'] \
+                              or cp.vl["CCButtons"]['ACCResumeBtn']) 
     
     # Update gas and brake
     if self.CP.carFingerprint in PLATFORM.C1:
